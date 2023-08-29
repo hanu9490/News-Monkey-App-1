@@ -23,8 +23,8 @@ class News extends Component {
     }`;
   }
 
-  getNewsApi = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?category=${this.props.category}&country=${this.props.country}&apiKey=9f4613e280b04c8d8525951305f3c631&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+  async updateNews(pageStatus) {
+    const url = `https://newsapi.org/v2/top-headlines?category=${this.props.category}&country=${this.props.country}&apiKey=7719bb41740a4d6fa3d548b048d084f2&page=${pageStatus}&pageSize=${this.props.pageSize}`;
     this.setState({ isLoading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -33,37 +33,33 @@ class News extends Component {
       totalResults: parsedData.totalResults,
       isLoading: false,
     });
-  };
+    console.log(parsedData);
+  }
 
   async componentDidMount() {
-    this.getNewsApi();
+    this.updateNews(this.state.page);
   }
 
   onChangePagePrevious = async () => {
-    this.setState({
-      page: this.state.page - 1,
-    });
-    this.getNewsApi();
+    this.setState((prevState) => ({
+      page: prevState.page - 1,
+    }));
+    this.updateNews(this.state.page - 1);
   };
 
   onChangePageNext = async () => {
-    if (
-      !(
-        this.state.page + 1 >
-        Math.ceil(this.state.totalResults / this.props.pageSize)
-      )
-    ) {
-      this.setState({
-        page: this.state.page + 1,
-      });
-      this.getNewsApi();
-    }
+    this.setState((prevState) => ({
+      page: prevState.page + 1,
+    }));
+    this.updateNews(this.state.page + 1);
   };
 
   render() {
     return (
       <div className="container my-4">
-        <h2 className="text-center my-3">News - Monkey</h2>
+        <h2 className="text-center" style={{ marginTop: "80px" }}>
+          News - Monkey
+        </h2>
         {this.state.isLoading && <Spinner />}
         <div className="row">
           {this.state.articles.map((element) => {
@@ -88,7 +84,7 @@ class News extends Component {
             );
           })}
         </div>
-        <div className="container mt-3 d-flex justify-content-between">
+        <div className="container mt-3 d-flex justify-content-between top-fixed">
           <button
             disabled={this.state.page <= 1}
             type="button"

@@ -4,7 +4,7 @@ import News from "./components/News";
 import { Routes, Route } from "react-router-dom";
 
 class App extends Component {
-  pageSize = "9";
+  pageSize = 15;
   render() {
     return (
       <div>
@@ -15,7 +15,7 @@ class App extends Component {
             path="/"
             element={
               <News
-                key="home"
+                key="general"
                 country="in"
                 pageSize={this.pageSize}
                 category="general"
@@ -49,9 +49,13 @@ class App extends Component {
           <Route
             exact
             path="/health"
-            key="health"
             element={
-              <News country="in" pageSize={this.pageSize} category="health" />
+              <News
+                key="health"
+                country="in"
+                pageSize={this.pageSize}
+                category="health"
+              />
             }
           />
           <Route
